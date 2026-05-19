@@ -7,4 +7,4 @@ def health_check():
     return {
         "status": "ok",
         "message": "FlikPik API is running"
-    }git 
+    }
