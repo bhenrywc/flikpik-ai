@@ -12,8 +12,11 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://fictional-lamp-g66469v677rfw9rw-5173.app.github.dev",
+        "https://fictional-lamp-g66469v677rfw9rw-5174.app.github.dev",
         "http://localhost:5173",
+        "http://localhost:5174",
         "http://127.0.0.1:5173",
+        "http://127.0.0.1:5174",
     ],
     allow_credentials=False,
     allow_methods=["*"],
@@ -27,6 +30,14 @@ app.include_router(ratings_router)
 
 
 @app.get("/")
+def root():
+    return {
+        "message": "Welcome to FlikPik AI API",
+        "docs": "/docs",
+        "health": "/health",
+        "popular_movies": "/recommendations/popular",
+        "movie_search": "/movies/search?query=batman",
+    }
 def root():
     return {
         "message": "Welcome cto FlikPik AI API",
