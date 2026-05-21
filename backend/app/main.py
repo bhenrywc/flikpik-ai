@@ -43,3 +43,29 @@ def search_movies(query: str = Query(...)):
     ]
 
     return results.to_dict(orient="records")
+
+@app.get("/recommendations/similar/{title}")
+def similar_movies(title: str):
+
+    target_movie = movies_df[
+        movies_df["title"].str.contains(title, case=False, na=False)
+    ]
+
+    if target_movie.empty:
+        return {"message": "Movie not found"}
+
+    target_genres = target_movie.iloc[0]["genres"].split("|")
+
+    def similarity_score(movie_genres):
+        genres = movie_genres.split("|")
+        return len(set(target_genres) & set(genres))
+
+    movies_df["score"] = movies_df["genres"].apply(similarity_score)
+
+    recommendations = (
+        movies_df[movies_df["title"] != target_movie.iloc[0]["title"]]
+        .sort_values(by="score", ascending=False)
+        .head(5)
+    )
+
+    return recommendations.to_dict(orient="records")
