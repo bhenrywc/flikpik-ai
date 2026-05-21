@@ -29,3 +29,19 @@ export async function saveRating(movie, rating) {
 
   return response.data;
 }
+
+export async function sendChatMessage(prompt) {
+  const response = await axios.post(`${API_BASE_URL}/chat/recommend`, {
+    prompt,
+  });
+
+  return response.data;
+}
+
+export async function semanticSearchMovies(query) {
+  const response = await axios.get(`${API_BASE_URL}/discovery/semantic-search`, {
+    params: { query },
+  });
+
+  return response.data;
+}
