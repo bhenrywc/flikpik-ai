@@ -2,8 +2,10 @@ import os
 
 import requests
 from dotenv import load_dotenv
+from pathlib import Path
 
-load_dotenv()
+ENV_PATH = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=ENV_PATH)
 
 TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 TMDB_SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
