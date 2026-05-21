@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_BASE_URL = "https://scaling-succotash-j99j96p97vvcj7gw-8000.app.github.dev";
+const API_BASE_URL = "https://fictional-lamp-g66469v677rfw9rw-8000.app.github.dev";
 
 export async function getPopularMovies() {
   const response = await axios.get(`${API_BASE_URL}/recommendations/popular`);
