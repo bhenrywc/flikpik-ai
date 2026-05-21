@@ -1,7 +1,14 @@
-from fastapi import FastAPI, Query
+import os
+import requests
 import pandas as pd
+from dotenv import load_dotenv
+from fastapi import FastAPI, Query
+
+load_dotenv()
 
 app = FastAPI(title="FlikPik AI API")
+
+TMDB_API_KEY = os.getenv("TMDB_API_KEY")
 
 movies_df = pd.DataFrame([
     {"movie_id": 1, "title": "The Dark Knight", "genres": "Action|Crime|Drama"},
@@ -17,6 +24,51 @@ movies_df = pd.DataFrame([
     {"movie_id": 11, "title": "Batman Begins", "genres": "Action|Crime|Drama"},
 ])
 
+
+def get_poster_url(title):
+    if not TMDB_API_KEY:
+        return None
+
+    url = "https://api.themoviedb.org/3/search/movie"
+
+    params = {
+        "api_key": TMDB_API_KEY,
+        "query": title
+    }
+
+    response = requests.get(url, params=params)
+
+    if response.status_code != 200:
+        return None
+
+    results = response.json().get("results", [])
+
+    if not results:
+        return None
+
+    poster_path = results[0].get("poster_path")
+
+    if not poster_path:
+        return None
+
+    return f"https://image.tmdb.org/t/p/w500{poster_path}"
+
+
+def get_trailer_url(title):
+    search_query = title.replace(" ", "+")
+    return f"https://www.youtube.com/results?search_query={search_query}+official+trailer"
+
+
+def enrich_movie(movie):
+    title = movie["title"]
+
+    return {
+        **movie,
+        "poster_url": get_poster_url(title),
+        "trailer_url": get_trailer_url(title)
+    }
+
+
 @app.get("/")
 def root():
     return {
@@ -25,6 +77,7 @@ def root():
         "health": "/health"
     }
 
+
 @app.get("/health")
 def health_check():
     return {
@@ -32,9 +85,12 @@ def health_check():
         "message": "FlikPik API is running"
     }
 
+
 @app.get("/recommendations/popular")
 def popular_movies():
-    return movies_df.head(10).to_dict(orient="records")
+    movies = movies_df.head(10).to_dict(orient="records")
+    return [enrich_movie(movie) for movie in movies]
+
 
 @app.get("/movies/search")
 def search_movies(query: str = Query(...)):
@@ -42,11 +98,12 @@ def search_movies(query: str = Query(...)):
         movies_df["title"].str.contains(query, case=False, na=False)
     ]
 
-    return results.to_dict(orient="records")
+    movies = results.to_dict(orient="records")
+    return [enrich_movie(movie) for movie in movies]
+
 
 @app.get("/recommendations/similar/{title}")
 def similar_movies(title: str):
-
     target_movie = movies_df[
         movies_df["title"].str.contains(title, case=False, na=False)
     ]
@@ -60,12 +117,14 @@ def similar_movies(title: str):
         genres = movie_genres.split("|")
         return len(set(target_genres) & set(genres))
 
-    movies_df["score"] = movies_df["genres"].apply(similarity_score)
+    temp_df = movies_df.copy()
+    temp_df["score"] = temp_df["genres"].apply(similarity_score)
 
     recommendations = (
-        movies_df[movies_df["title"] != target_movie.iloc[0]["title"]]
+        temp_df[temp_df["title"] != target_movie.iloc[0]["title"]]
         .sort_values(by="score", ascending=False)
         .head(5)
     )
 
-    return recommendations.to_dict(orient="records")
+    movies = recommendations.to_dict(orient="records")
+    return [enrich_movie(movie) for movie in movies]
