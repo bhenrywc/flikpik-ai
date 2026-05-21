@@ -1,0 +1,123 @@
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: radial-gradient(circle at top left, rgba(229, 9, 20, 0.25), transparent 35%), linear-gradient(135deg, #090909 0%, #151515 55%, #060606 100%);
+  color: #ffffff;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+}
+
+a { color: inherit; }
+button, input { font: inherit; }
+
+.app { min-height: 100vh; padding: 24px; }
+
+.navbar {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 auto 40px;
+  max-width: 1200px;
+}
+
+.brand {
+  align-items: center;
+  display: flex;
+  font-size: 26px;
+  font-weight: 800;
+  gap: 10px;
+  letter-spacing: -0.03em;
+}
+
+.brand-mark {
+  align-items: center;
+  background: #e50914;
+  border-radius: 14px;
+  display: inline-flex;
+  height: 42px;
+  justify-content: center;
+  width: 42px;
+}
+
+.nav-links { display: flex; gap: 20px; }
+.nav-links a { color: #cfcfcf; font-size: 14px; text-decoration: none; }
+
+.hero {
+  align-items: end;
+  display: grid;
+  gap: 30px;
+  grid-template-columns: 1.2fr 0.8fr;
+  margin: 0 auto 36px;
+  max-width: 1200px;
+}
+
+.hero-copy h1 { font-size: clamp(48px, 9vw, 96px); line-height: 0.9; margin: 0 0 16px; }
+.hero-copy p { color: #d5d5d5; font-size: 18px; line-height: 1.6; max-width: 650px; }
+.eyebrow { color: #ff6b6b !important; font-size: 14px !important; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+
+.search-panel {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 24px;
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+}
+
+.search-panel input {
+  background: #111;
+  border: 1px solid #333;
+  border-radius: 16px;
+  color: white;
+  flex: 1;
+  outline: none;
+  padding: 14px 16px;
+}
+
+.search-panel button, .secondary-button, .card-actions button, .card-actions a {
+  background: #e50914;
+  border: none;
+  border-radius: 14px;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  padding: 12px 16px;
+  text-decoration: none;
+}
+
+.secondary-button { background: #2b2b2b; }
+.content-section { margin: 0 auto; max-width: 1200px; }
+.section-header { align-items: center; display: flex; justify-content: space-between; margin-bottom: 18px; }
+.section-header h2 { font-size: 30px; margin: 0; }
+.movie-grid { display: grid; gap: 24px; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); }
+
+.movie-card {
+  background: rgba(255, 255, 255, 0.075);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: 24px;
+  overflow: hidden;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.movie-card:hover { border-color: rgba(229, 9, 20, 0.7); transform: translateY(-4px); }
+.poster-frame { background: #191919; height: 340px; overflow: hidden; }
+.poster-frame img { height: 100%; object-fit: cover; width: 100%; }
+.poster-placeholder { align-items: center; color: #aaa; display: flex; height: 100%; justify-content: center; }
+.movie-card-body { padding: 18px; }
+.movie-card h3 { font-size: 20px; margin: 0 0 8px; }
+.genres, .score { color: #bbbbbb; font-size: 14px; margin: 0 0 14px; }
+.card-actions { display: grid; gap: 10px; grid-template-columns: 1fr; margin-bottom: 16px; }
+.card-actions a, .card-actions button { text-align: center; }
+.card-actions button { background: #2b2b2b; }
+.ratings { border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 14px; }
+.ratings span { color: #cfcfcf; display: block; font-size: 13px; margin-bottom: 8px; }
+.rating-buttons { display: flex; flex-wrap: wrap; gap: 6px; }
+.rating-buttons button { background: #222; border: 1px solid #444; border-radius: 10px; color: #fff; cursor: pointer; padding: 7px 9px; }
+.rating-buttons button.active-rating { background: #e50914; border-color: #e50914; }
+.empty-state, .error-box, .loading { background: rgba(255, 255, 255, 0.08); border-radius: 20px; color: #dcdcdc; padding: 24px; text-align: center; }
+.error-box { border: 1px solid rgba(229, 9, 20, 0.5); margin-bottom: 20px; }
+.loading { align-items: center; display: flex; flex-direction: column; gap: 12px; }
+.spinner { animation: spin 0.9s linear infinite; border: 4px solid #333; border-top-color: #e50914; border-radius: 50%; height: 44px; width: 44px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+@media (max-width: 800px) { .hero { grid-template-columns: 1fr; } .nav-links { display: none; } .search-panel { flex-direction: column; } }
